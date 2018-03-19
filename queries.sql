@@ -24,7 +24,3 @@ create view transaction_with_book_and_user_id as select t.* , a.book_name
 7) select user_id, count(user_id) from transaction_with_book_and_user_id
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by user_id
   order by count(user_id) desc limit 1;
-
-
-  
- -- select * from (select d.user_id,b.book_id,b.book_name from all_book_details b join transaction d on b.book_id = d.book_id where d.borrowed_on>'2017-06-01' and d.borrowed_on<'2017-07-01') group by book_name
