@@ -20,8 +20,5 @@ create table Book_details (ISBN varchar(13) primary key, book_name varchar(40),
 
 alter table books add constraint fk_to_books foreign key (ISBN) references Book_details(ISBN);
 
-COPY Book_details from '/Users/shubhaj/Downloads/Book_details.csv' with delimiter ',';
-COPY books from '/Users/shubhaj/Downloads/Books.csv' with delimiter ',';
-
-
-DROP schema library cascade;
+COPY Book_details from '/Users/sridevs/Desktop/libraryDB/Book_details.csv' with delimiter ',';
+COPY books from '/Users/sridevs/Desktop/libraryDB/Books.csv' with delimiter ',';
