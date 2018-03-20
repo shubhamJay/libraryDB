@@ -12,8 +12,9 @@ TRUNC(DATE_PART('day', t.returned_on::timestamp - t.borrowed_on::timestamp)) as 
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by book_name
   order by count(book_name) desc;
 
--- 5) select not book_name from transaction_with_all_book
---   where not borrowed_on>'2017-06-01';
+
+-- someone create view which joins all book_name to transaction table
+5) select distinct book_name from transaction_with_all_book where returned_on-borrowed_on>120 or transaction_id is null;
 
 7) select user_id, count(user_id) from transaction_with_book_and_user_id
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by user_id
