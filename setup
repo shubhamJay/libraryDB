@@ -1,0 +1,4 @@
+#! /bin/sh
+dropdb libraryDB
+createdb libraryDB
+psql -v p=$PWD -d library -a -f start.sql

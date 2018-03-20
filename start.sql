@@ -20,5 +20,8 @@ create table Book_details (ISBN varchar(13) primary key, book_name varchar(40),
 
 alter table books add constraint fk_to_books foreign key (ISBN) references Book_details(ISBN);
 
-COPY Book_details from '/Users/sridevs/Desktop/libraryDB/Book_details.csv' with delimiter ',';
-COPY books from '/Users/sridevs/Desktop/libraryDB/Books.csv' with delimiter ',';
+\set path '\'':p'/Book_details.csv\''
+COPY Book_details from :path with delimiter ',';
+
+\set path '\'':p'/Books.csv\''
+COPY books from :path with delimiter ',';
