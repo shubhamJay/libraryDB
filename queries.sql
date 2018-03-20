@@ -1,12 +1,16 @@
 
+
 create view all_book_details as select b.book_id,b.availability,d.* from books b join book_details d
   on b.isbn = d.isbn;
 
-1) - select * from  all_book_details where availability = false;
+
 
 create view count_of_book as select b.isbn, count(b.isbn)
   as number_of_book from books b join book_details d on b.isbn = d.isbn
   group by b.isbn;
+
+
+1) select distinct book_name from book_details;
 
 
 2) select * from count_of_book order by number_of_book desc;
@@ -20,9 +24,6 @@ TRUNC(DATE_PART('day', t.returned_on::timestamp - t.borrowed_on::timestamp)) as 
 4) select book_name, count(book_name) as count1 from transaction_with_book_and_user_id
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by book_name
   order by count(book_name) desc;
-
-create view transaction_with_all_book as select t.* , a.book_name
-  from all_book_details a left join transaction t on a.book_id = t.book_id;
 
 -- 5) select not book_name from transaction_with_all_book
 --   where not borrowed_on>'2017-06-01';

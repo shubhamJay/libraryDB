@@ -1,0 +1,2 @@
+#! /bin/sh
+psql -v p=$PWD -d libraryDB -a -f start.sql
