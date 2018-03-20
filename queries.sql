@@ -1,19 +1,6 @@
+1) select book_name from book_details;
 
-
-create view all_book_details as select b.book_id,b.availability,d.* from books b join book_details d
-  on b.isbn = d.isbn;
-
-
-
-create view count_of_book as select b.isbn, count(b.isbn)
-  as number_of_book from books b join book_details d on b.isbn = d.isbn
-  group by b.isbn;
-
-
-1) select distinct book_name from book_details;
-
-
-2) select * from count_of_book order by number_of_book desc;
+2) select book_name,isbn from count_of_book where number_of_book = (select max(number_of_book) from count_of_book);
 
 3)select * from count_of_book where number_of_book<5 order by number_of_book desc;
 
