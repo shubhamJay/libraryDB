@@ -15,7 +15,7 @@
   order by count(user_id) desc;
 
 8)select user_id,book_name from transaction_with_book_and_user_id
-  where borrowed_on<'2017-06-20' and returned_on is null;
+  where borrowed_on<'2017-06-30' and returned_on is null;
 
 9)-select * from all_transaction_of_before_june where count > 2;
 
