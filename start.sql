@@ -9,14 +9,12 @@ create table Book_details (ISBN varchar(13) primary key, book_name varchar(40),
   description Text ,type varchar(20) not null
   );
 
-  create table users (user_id varchar(20) primary key,password varchar(20) not null, name varchar(40) not null,
-  contact_no numeric(10) not null, email_id varchar(40) not null);
+create table users (user_id varchar(20) primary key,password varchar(20) not null, name varchar(40) not null,
+contact_no numeric(10) not null, email_id varchar(40) not null);
 
 
-  create table transaction (transaction_id numeric(5) primary key, user_id varchar(20) references users(user_id) ,
-  book_id numeric(5) references books(book_id), borrowed_on date, returned_on date);
-
-
+create table transaction (transaction_id numeric(5) primary key, user_id varchar(20) references users(user_id) ,
+book_id numeric(5) references books(book_id), borrowed_on date, returned_on date default null);
 
 alter table books add constraint fk_to_books foreign key (ISBN) references Book_details(ISBN);
 
@@ -28,11 +26,16 @@ create view count_of_book as select b.isbn, count(b.isbn)
   as number_of_book from books b join book_details d on b.isbn = d.isbn
   group by b.isbn;
 
-create view transaction_with_book_and_user_id as select t.* , a.book_name
-  from all_book_details a join transaction t on a.book_id = t.book_id;
+create view transaction_with_book_and_user_id as select t.* , a.book_name,a.isbn,
+  (t.returned_on- t.borrowed_on)as daydiff from all_book_details a join
+  transaction t on a.book_id = t.book_id;
 
 create view transaction_with_all_book as select t.* , a.book_name
-  from all_book_details a left join transaction t on a.book_id = t.book_id;   
+  from all_book_details a left join transaction t on a.book_id = t.book_id;
+
+create view all_transaction_of_before_june as select user_id,count(user_id)
+  from transaction_with_book_and_user_id   where borrowed_on<'2017-06-20'
+  and returned_on is null group by user_id;
 ------------------------------END----------------------------------------------
 \set path '\'':p'/Book_details.csv\''
 COPY Book_details from :path with delimiter ',';

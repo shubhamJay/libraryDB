@@ -1,25 +1,8 @@
-
-
-create view all_book_details as select b.book_id,b.availability,d.* from books b join book_details d
-  on b.isbn = d.isbn;
-
-
-
-create view count_of_book as select b.isbn, count(b.isbn)
-  as number_of_book from books b join book_details d on b.isbn = d.isbn
-  group by b.isbn;
-
-
 1) select distinct book_name from book_details;
-
 
 2) select * from count_of_book order by number_of_book desc;
 
 3)select * from count_of_book where number_of_book<5 order by number_of_book desc;
-
-create view transaction_with_book_and_user_id as select t.* , a.book_name,a.isbn,
-TRUNC(DATE_PART('day', t.returned_on::timestamp - t.borrowed_on::timestamp)) as daydiff from all_book_details a join transaction t on a.book_id = t.book_id;
-
 
 4) select book_name, count(book_name) as count1 from transaction_with_book_and_user_id
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by book_name
@@ -34,10 +17,6 @@ TRUNC(DATE_PART('day', t.returned_on::timestamp - t.borrowed_on::timestamp)) as 
 
 8)-select user_id,book_name from transaction_with_book_and_user_id
   where borrowed_on<'2017-06-20' and returned_on is null;
-
-create view all_transaction_of_before_june as select user_id,count(user_id)
-   from transaction_with_book_and_user_id   where borrowed_on<'2017-06-20'
-   and returned_on is null group by user_id;
 
 9)-select * from all_transaction_of_before_june where count > 2;
 
