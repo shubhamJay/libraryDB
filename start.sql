@@ -26,15 +26,14 @@ create view count_of_book as select b.isbn,d.book_name, count(b.isbn)
   as number_of_book from books b join book_details d on b.isbn = d.isbn
   group by b.isbn, d.book_name;
 
-create view transaction_with_book_and_user_id as select t.* , a.book_name,a.isbn,
-  (t.returned_on- t.borrowed_on)as daydiff from all_book_details a join
+create view detailed_transaction as select t.* ,(t.returned_on- t.borrowed_on)as bwd_duration_in_days, a.book_name,a.isbn
+   from all_book_details a join
   transaction t on a.book_id = t.book_id;
 
-create view transaction_with_all_book as select t.* , a.book_name
-  from all_book_details a left join transaction t on a.book_id = t.book_id;
+create view untouched_books as select b.isbn,b.book_name from all_book_details b except select dt.isbn,dt.book_name from detailed_transaction dt where dt.isbn is not null; 
 
 create view all_transaction_of_before_june as select user_id,count(user_id)
-  from transaction_with_book_and_user_id   where borrowed_on<'2017-06-30'
+  from detailed_transaction   where borrowed_on<'2017-06-30'
   and returned_on is null group by user_id;
 ------------------------------END----------------------------------------------
 \set path '\'':p'/Book_details.csv\''
