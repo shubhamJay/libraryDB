@@ -1,1 +1,0 @@
-DROP schema library cascade;
