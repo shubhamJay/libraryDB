@@ -22,9 +22,9 @@ alter table books add constraint fk_to_books foreign key (ISBN) references Book_
 create view all_book_details as select b.book_id,b.availability,d.* from books b join book_details d
   on b.isbn = d.isbn;
 
-create view count_of_book as select b.isbn, count(b.isbn)
+create view count_of_book as select b.isbn,d.book_name, count(b.isbn)
   as number_of_book from books b join book_details d on b.isbn = d.isbn
-  group by b.isbn;
+  group by b.isbn, d.book_name;
 
 create view transaction_with_book_and_user_id as select t.* , a.book_name,a.isbn,
   (t.returned_on- t.borrowed_on)as daydiff from all_book_details a join

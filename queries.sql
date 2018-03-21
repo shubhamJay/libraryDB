@@ -1,6 +1,6 @@
-1) select distinct book_name from book_details;
+1) select book_name from book_details;
 
-2) select * from count_of_book order by number_of_book desc;
+2) select book_name,isbn from count_of_book where number_of_book = (select max(number_of_book) from count_of_book);
 
 3)select * from count_of_book where number_of_book<5 order by number_of_book desc;
 
@@ -8,14 +8,13 @@
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by book_name
   order by count(book_name) desc;
 
--- 5) select not book_name from transaction_with_all_book
---   where not borrowed_on>'2017-06-01';
+5) select distinct book_name from transaction_with_all_book where returned_on-borrowed_on>120 or transaction_id is null;
 
 7) select user_id, count(user_id) from transaction_with_book_and_user_id
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by user_id
   order by count(user_id) desc;
 
-8)-select user_id,book_name from transaction_with_book_and_user_id
+8)select user_id,book_name from transaction_with_book_and_user_id
   where borrowed_on<'2017-06-20' and returned_on is null;
 
 9)-select * from all_transaction_of_before_june where count > 2;
