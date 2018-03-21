@@ -3,5 +3,5 @@ if [[ $1 ]]; then
   createDB $1
   psql -v p=$PWD -d $1 -a -f start.sql
 else createDB librarydDB
-psql -v p=$PWD -d librarydDB -a -f start.sql
+psql -v p=$PWD -d libraryDB -a -f start.sql
 fi
