@@ -30,11 +30,18 @@ create view detailed_transaction as select t.* ,(t.returned_on- t.borrowed_on)as
    from all_book_details a join
   transaction t on a.book_id = t.book_id;
 
-create view untouched_books as select b.isbn,b.book_name from all_book_details b except select dt.isbn,dt.book_name from detailed_transaction dt where dt.isbn is not null; 
+create view untouched_books as select b.isbn,b.book_name from all_book_details b except select dt.isbn,dt.book_name from detailed_transaction dt where dt.isbn is not null;
 
 create view all_transaction_of_before_june as select user_id,count(user_id)
   from detailed_transaction   where borrowed_on<'2017-06-30'
   and returned_on is null group by user_id;
+-----------------------------functions-----------------------------------------
+
+create or replace function getNumberOfCopies ( toSearch varchar) RETURNS bigint AS '
+  select count(books.ISBN) from books where books.ISBN = toSearch
+  '
+  LANGUAGE SQL;
+
 ------------------------------END----------------------------------------------
 \set path '\'':p'/Book_details.csv\''
 COPY Book_details from :path with delimiter ',';

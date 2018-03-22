@@ -8,7 +8,15 @@
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by book_name
   order by count(book_name) desc;
 
-5) select distinct book_name from transaction_with_all_book where returned_on-borrowed_on>120 or transaction_id is null;
+5) with books_borrowed as (select t.*,b.ISBN from books b join transaction t on b.book_id = t.book_id where date(now()) - borrowed_on < 250)
+  select distinct books.ISBN from books
+  except
+  select distinct books_borrowed.ISBN from books_borrowed;
+
+6) with books_borrowed as (select t.*,b.ISBN from books b join transaction t on b.book_id = t.book_id where date(now()) - borrowed_on < 250)
+  select distinct books.ISBN from books where getNumberOfCopies(books.ISBN) > 2
+  except
+  select distinct books_borrowed.ISBN from books_borrowed;
 
 7) select user_id, count(user_id) from detailed_transaction
   where borrowed_on>'2017-06-01' and borrowed_on<'2017-07-01' group by user_id
