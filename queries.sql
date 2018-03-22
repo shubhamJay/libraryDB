@@ -12,10 +12,8 @@ select book_name, count(book_name) as count from get_transactions_in_given_month
   group by book_name order by count desc;
 
 -- 5)Show the titles not borrowed for more than four months as of current date.
-with books_borrowed as (select t.*,b.ISBN from books b join transaction t on b.book_id = t.book_id where date(now()) - borrowed_on < 250)
-  select distinct books.ISBN from books
-  except
-  select distinct books_borrowed.ISBN from books_borrowed;
+with books_borrowed_within_four_months as( select isbn,book_name from detailed_transaction where (current_date-borrowed_on<120))
+select * from old_books except select * from books_borrowed_within_four_months;
 
 -- 6) Show the titles with more than 10 copies and not borrowed for the last 3 months.
 with books_borrowed as (select t.*,b.ISBN from books b join transaction t on b.book_id = t.book_id where date(now()) - borrowed_on < 250)

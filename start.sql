@@ -2,7 +2,7 @@ create schema library;
 
 set search_path to library;
 
-create table books (book_id numeric(5) primary key, ISBN varchar(13),availability boolean default true);
+create table books (book_id numeric(5) primary key, ISBN varchar(13),added_on date not null , availability boolean default true);
 
 create table Book_details (ISBN varchar(13) primary key, book_name varchar(40),
   Author varchar(40) not null default 'unknown', Publisher varchar(400) not null default 'unknown',
@@ -32,11 +32,10 @@ create view detailed_transaction as select t.* ,(t.returned_on- t.borrowed_on)as
 
 create view untouched_books as select b.isbn,b.book_name from all_book_details b except select dt.isbn,dt.book_name from detailed_transaction dt where dt.isbn is not null;
 
-create view all_transaction_of_before_june as select user_id,count(user_id)
-  from detailed_transaction   where borrowed_on<'2017-06-30'
-  and returned_on is null group by user_id;
+create view currently_bwd_books as select book_name,(current_date - dt.borrowed_on) as dur_in_days,u.name as bwd_by,dt.user_id from detailed_transaction dt join users u using (user_id) where returned_on is null;
 
-  create view currently_bwd_books as select book_name,(current_date - dt.borrowed_on) as dur_in_days,u.name as bwd_by,dt.user_id from detailed_transaction dt join users u using (user_id) where returned_on is null;
+create view  old_books as select distinct isbn , book_name from book_details
+  join books b using (isbn) where (current_date-b.added_on) > 120;  
 -----------------------------functions-----------------------------------------
 
 create or replace function get_number_of_copies (toSearch varchar) RETURNS bigint AS '
