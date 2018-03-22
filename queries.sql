@@ -21,8 +21,8 @@ select isbn, book_name from count_of_book where number_of_book > 10
 except select * from books_borrowed_within_3_months;
 
 -- 7)Show the library user who borrowed the maximum books in a given period. (Eg: Jan 2018)
-select user_id, count(user_id) from get_transactions_in_given_month(7,2017)
-  group by user_id order by count desc;
+select u.user_id,u.name,count(user_id) from get_transactions_in_given_month(8,2017) join users u using (user_id)
+  group by u.user_id,u.name order by count desc;
 
 -- 8)Show the library user(s) who are in possession of a library book for more then 15 days.
 select distinct user_id,bwd_by as user_name from currently_bwd_books
