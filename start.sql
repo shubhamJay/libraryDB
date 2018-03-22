@@ -30,11 +30,27 @@ create view detailed_transaction as select t.* ,(t.returned_on- t.borrowed_on)as
    from all_book_details a join
   transaction t on a.book_id = t.book_id;
 
-create view untouched_books as select b.isbn,b.book_name from all_book_details b except select dt.isbn,dt.book_name from detailed_transaction dt where dt.isbn is not null; 
+create view untouched_books as select b.isbn,b.book_name from all_book_details b except select dt.isbn,dt.book_name from detailed_transaction dt where dt.isbn is not null;
 
 create view all_transaction_of_before_june as select user_id,count(user_id)
   from detailed_transaction   where borrowed_on<'2017-06-30'
   and returned_on is null group by user_id;
+-----------------------------functions-----------------------------------------
+
+create or replace function get_number_of_copies (toSearch varchar) RETURNS bigint AS '
+  select count(books.ISBN) from books where books.ISBN = toSearch
+  '
+  LANGUAGE SQL;
+
+create or replace function get_transactions_in_given_month(monthNum integer, yearNum integer)
+  returns table(transaction_id numeric,user_id varchar,book_id numeric,borrowed_on date,
+    returned_on date,book_name varchar,isbn varchar) as $$
+
+  select transaction_id,user_id,book_id,borrowed_on,returned_on,book_name,isbn from detailed_transaction where EXTRACT('month' from borrowed_on) = monthNum and
+  EXTRACT('year' from borrowed_on) = yearNum;
+  $$
+ language SQL;
+
 ------------------------------END----------------------------------------------
 \set path '\'':p'/Book_details.csv\''
 COPY Book_details from :path with delimiter ',';
