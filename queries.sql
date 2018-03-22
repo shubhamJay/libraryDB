@@ -37,11 +37,17 @@ select user_id, count(user_id) from detailed_transaction
 
 
 -- 8)Show the library user(s) who are in possession of a library book for more then 15 days.
-select * from currently_bwd_books where duration_in_days > 15;
+select distinct user_id,bwd_by as user_name from currently_bwd_books 
+where dur_in_days>15;
 
 -- 9)Show the library user(s) who are in possession of more than two library books and holding atleast two of them for more then 15 days.
-select * from all_transaction_of_before_june where count > 2;
-
+with bwd_books_count as
+  (select
+   bwd_by,count(user_id) as no_of_books from currently_bwd_books
+   where dur_in_days>15
+   group by bwd_by
+   order by no_of_books desc)
+select bwd_by from bwd_books_count where no_of_books >= 2;
 
 -- 11)Show the titles that are in high demand and copies not available.
 select * from detailed_transaction where bwd_duration_in_days <7;

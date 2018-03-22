@@ -32,11 +32,7 @@ create view detailed_transaction as select t.* ,(t.returned_on- t.borrowed_on)as
 
 create view untouched_books as select b.isbn,b.book_name from all_book_details b except select dt.isbn,dt.book_name from detailed_transaction dt where dt.isbn is not null;
 
-create view all_transaction_of_before_june as select user_id,count(user_id)
-  from detailed_transaction   where borrowed_on<'2017-06-30'
-  and returned_on is null group by user_id;
-
-create view currently_bwd_books as select book_name,(current_date - dt.borrowed_on) as duration_in_days from detailed_transaction dt where returned_on is null;
+create view currently_bwd_books as select book_name,(current_date - dt.borrowed_on) as dur_in_days,u.name as bwd_by,dt.user_id from detailed_transaction dt join users u using (user_id) where returned_on is null;
 -----------------------------functions-----------------------------------------
 
 create or replace function getNumberOfCopies ( toSearch varchar) RETURNS bigint AS '
