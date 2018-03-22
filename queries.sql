@@ -37,9 +37,7 @@ select user_id, count(user_id) from detailed_transaction
 
 
 -- 8)Show the library user(s) who are in possession of a library book for more then 15 days.
-select user_id,book_name from detailed_transaction
-  where borrowed_on<'2017-06-30' and returned_on is null;
-
+select * from currently_bwd_books where duration_in_days > 15;
 
 -- 9)Show the library user(s) who are in possession of more than two library books and holding atleast two of them for more then 15 days.
 select * from all_transaction_of_before_june where count > 2;
