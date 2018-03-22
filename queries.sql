@@ -37,6 +37,11 @@ with bwd_books_count as
    order by no_of_books desc)
 select bwd_by from bwd_books_count where no_of_books >= 2;
 
+--10)Show the titles that are in high demand and copies not available.
+with unavailable_books as (
+  select * from books join count_of_book using (isbn) where availability is false order by number_of_book desc) 
+select isbn,book_name,(count(book_name)/number_of_book::float) as demand_ratio from unavailable_books group by number_of_book,isbn, book_name order by demand_ratio desc;
+
 -- 11)Show the titles that are in high demand and copies not available.
 select * from detailed_transaction where bwd_duration_in_days <7;
 
