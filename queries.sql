@@ -1,5 +1,5 @@
 -- 1. Show the total titles available in the library.
-select book_name from book_details;
+select book_name,number_of_book from count_of_book;
 
 -- 2)  Show the titles with highest number of copies.
 select book_name,isbn from count_of_book where number_of_book = (select max(number_of_book) from count_of_book);
@@ -39,7 +39,7 @@ select bwd_by from bwd_books_count where no_of_books >= 2;
 
 --10)Show the titles that are in high demand and copies not available.
 with unavailable_books as (
-  select * from books join count_of_book using (isbn) where availability is false order by number_of_book desc) 
+  select * from books join count_of_book using (isbn) where availability is false order by number_of_book desc)
 select isbn,book_name,(count(book_name)/number_of_book::float) as demand_ratio from unavailable_books group by number_of_book,isbn, book_name order by demand_ratio desc;
 
 -- 11)Show the titles that are in high demand and copies not available.
