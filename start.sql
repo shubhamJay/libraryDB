@@ -23,8 +23,8 @@ create view all_book_details as select b.book_id,b.availability,d.* from books b
   on b.isbn = d.isbn;
 
 create view count_of_book as select b.isbn,d.book_name, count(b.isbn)
-  as number_of_book from books b join book_details d on b.isbn = d.isbn
-  group by b.isbn, d.book_name order by number_of_book desc;
+  as count from books b join book_details d on b.isbn = d.isbn
+  group by b.isbn, d.book_name order by count desc;
 
 create view detailed_transaction as select t.* ,(t.returned_on- t.borrowed_on)as bwd_duration_in_days, a.book_name,a.isbn
    from all_book_details a join
