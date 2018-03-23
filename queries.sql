@@ -46,5 +46,5 @@ select isbn,book_name,(count(book_name)/count::float) as demand_ratio from unava
 select * from detailed_transaction where bwd_duration_in_days <7;
 
 -- 12) Show the average period of holding the borrowed books that were returned in a certain period. (Eg: Jan 2018).
-select avg(returned_on - borrowed_on) avg_of_time_of_holding_book from
+select avg(bwd_duration_in_days) avg_period_of_holding from
   get_transactions_in_given_month(6,2017);

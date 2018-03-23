@@ -35,7 +35,7 @@ create view untouched_books as select b.isbn,b.book_name from all_book_details b
 create view currently_bwd_books as select book_name,(current_date - dt.borrowed_on) as dur_in_days,u.name as bwd_by,dt.user_id from detailed_transaction dt join users u using (user_id) where returned_on is null;
 
 create view  old_books as select distinct isbn , book_name from book_details
-  join books b using (isbn) where (current_date-b.added_on) > 120;  
+  join books b using (isbn) where (current_date-b.added_on) > 120;
 -----------------------------functions-----------------------------------------
 
 create or replace function get_number_of_copies (toSearch varchar) RETURNS bigint AS '
@@ -45,9 +45,9 @@ create or replace function get_number_of_copies (toSearch varchar) RETURNS bigin
 
 create or replace function get_transactions_in_given_month(monthNum integer, yearNum integer)
   returns table(transaction_id numeric,user_id varchar,book_id numeric,borrowed_on date,
-    returned_on date,book_name varchar,isbn varchar) as $$
+    returned_on date,bwd_duration_in_days int ,book_name varchar,isbn varchar) as $$
 
-  select transaction_id,user_id,book_id,borrowed_on,returned_on,book_name,isbn from detailed_transaction where EXTRACT('month' from borrowed_on) = monthNum and
+  select * from detailed_transaction where EXTRACT('month' from borrowed_on) = monthNum and
   EXTRACT('year' from borrowed_on) = yearNum;
   $$
  language SQL;
