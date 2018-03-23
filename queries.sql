@@ -16,8 +16,8 @@ with books_borrowed_within_four_months as( select isbn,book_name from detailed_t
 select * from old_books except select * from books_borrowed_within_four_months;
 
 -- 6) Show the titles with more than 10 copies and not borrowed for the last 3 months.
-with books_borrowed_within_3_months as( select isbn,book_name from detailed_transaction where (current_date-borrowed_on<90))
-select isbn, book_name from count_of_book where count > 10
+with books_borrowed_within_3_months as( select isbn,book_name, count(isbn) as number_of_book  from detailed_transaction where (current_date-borrowed_on<90) group by isbn,book_name)
+select isbn, book_name ,count from count_of_book where count > 10
 except select * from books_borrowed_within_3_months;
 
 -- 7)Show the library user who borrowed the maximum books in a given period. (Eg: Jan 2018)
